@@ -12,6 +12,7 @@ public class Main {
 
         Terminal terminal = TerminalFacade.createTerminal(System.in, System.out, Charset.forName("UTF8"));
         terminal.enterPrivateMode();
+
         while (true) {
             UpdateScreen(player, terminal);
             MovePlayer(player, terminal);
@@ -30,31 +31,31 @@ public class Main {
         do {
             Thread.sleep(5);
             key = terminal.readInput();
-
-            switch (key.getCharacter()){
-                case 'U':
-                    if (player.y > 0) {
-                        player.y--;
-                    }
-                    break;
-                case 'D':
-                    if (player.y < 20) {
-                        player.y++;
-                    }
-                    break;
-                case 'L':
-                    if (player.x > 0) {
-                        player.x--;
-                    }
-                    break;
-                case 'R':
-                    if (player.x < 20) {
-                        player.y++;
-                    }
-                    break;
-            }
-
         } while (key == null);
+
+        switch (key.getCharacter()){
+            case 'U':
+                if (player.y > 0) {
+                    player.y--;
+                }
+                break;
+            case 'D':
+                if (player.y < 20) {
+                    player.y++;
+                }
+                break;
+            case 'L':
+                if (player.x > 0) {
+                    player.x--;
+                }
+                break;
+            case 'R':
+                if (player.x < 20) {
+                    player.x++;
+                }
+                break;
+        }
+
         System.out.println(key.getCharacter() + " " + key.getKind());
     }
 }
