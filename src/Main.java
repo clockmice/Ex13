@@ -9,6 +9,7 @@ public class Main {
     public static void main(String[] args) throws InterruptedException {
 
         Player player = new Player(10, 10);
+        Monster monster = new Monster(5, 5);
 
         Terminal terminal = TerminalFacade.createTerminal(System.in, System.out, Charset.forName("UTF8"));
         terminal.enterPrivateMode();
