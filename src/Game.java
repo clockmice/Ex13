@@ -1,16 +1,17 @@
-import com.googlecode.lanterna.input.Key;
 import com.googlecode.lanterna.terminal.Terminal;
+
+import java.util.List;
 
 public class Game {
     public static boolean run = true;
 
     public Player player;
-    public Monster monster;
-    public Terminal terminal;
+    public static Terminal terminal;
+    List<Monster> monsters ;
 
-    public Game(Player player, Monster monster, Terminal terminal) {
+    public Game(Player player, List<Monster> monsters, Terminal terminal) {
         this.player = player;
-        this.monster = monster;
+        this.monsters = monsters;
         this.terminal = terminal;
     }
 
@@ -18,51 +19,71 @@ public class Game {
         terminal.enterPrivateMode();
 
         do {
-            UpdateScreen(player, monster, terminal);
+            UpdateScreen(player, monsters, terminal);
             player.Move(player, terminal);
-            GameLogic(player, monster);
+            GameLogic(player, monsters);
         }
         while (run);
 
-        UpdateScreen(player, monster, terminal);
+        UpdateScreen(player, monsters, terminal);
         terminal.clearScreen();
         GameOver(terminal);
         System.exit(0);
     }
 
-    private void UpdateScreen(Player player, Monster monster, Terminal terminal) {
+    private void UpdateScreen(Player player, List<Monster> monsters, Terminal terminal) {
         terminal.clearScreen();
-        terminal.moveCursor(player.x, player.y);
+        terminal.moveCursor(Math.round(player.x), Math.round(player.y));
         terminal.applyForegroundColor(0, 204, 0);
         terminal.putCharacter('O');
-        terminal.moveCursor(monster.x, monster.y);
-        terminal.applyForegroundColor(255, 0, 0);
-        terminal.putCharacter('ω');
+        for (Monster monster : monsters) {
+            terminal.moveCursor(Math.round(monster.x), Math.round(monster.y));
+            terminal.applyForegroundColor(255, 0, 0);
+            terminal.putCharacter('ω');
+        }
         DrawFrame(terminal);
         terminal.moveCursor(0,0);
     }
 
-    private static void GameLogic(Player player, Monster monster) throws InterruptedException {
+    private static void GameLogic(Player player, List<Monster> monsters) throws InterruptedException {
 
-        if (Math.abs(player.x - monster.x) >= Math.abs(player.y - monster.y)){
-            if (player.x > monster.x){
-                monster.x++;
+        for (Monster monster : monsters) {
+            if (Math.abs(player.x - monster.x) >= Math.abs(player.y - monster.y)){
+                if (player.x > monster.x){
+                    monster.x += 0.7;
+                }
+                else if (player.x < monster.x){
+                    monster.x-= 0.7;
+                }
             }
-            else if (player.x < monster.x){
-                monster.x--;
+            else if (Math.abs(player.x - monster.x) < Math.abs(player.y - monster.y)) {
+                if (player.y > monster.y) {
+                    monster.y+= 0.7;
+                } else if (player.y < monster.y) {
+                    monster.y-= 0.7;
+                }
             }
-        }
-        else if (Math.abs(player.x - monster.x) < Math.abs(player.y - monster.y)) {
-            if (player.y > monster.y) {
-                monster.y++;
-            } else if (player.y < monster.y) {
-                monster.y--;
+            if ((Math.round(player.x) == Math.round(monster.x)) && (Math.round(player.y) == Math.round(monster.y))){
+                Fail(terminal, monster);
+                run = false;
+                break;
             }
-        }
-        if ((player.x == monster.x) && (player.y == monster.y)){
-            run = false;
         }
     }
+
+    private static void Fail(Terminal terminal, Monster monster) throws InterruptedException {
+        for (int i = 0; i<5; i++) {
+            terminal.clearScreen();
+            terminal.moveCursor(Math.round(monster.x), Math.round(monster.y));
+            terminal.applyForegroundColor(0, 255, 0);
+            terminal.putCharacter('X');
+            terminal.moveCursor(0,0);
+            Thread.sleep(200);
+            terminal.clearScreen();
+            Thread.sleep(200);
+        }
+    }
+
     private static void GameOver(Terminal terminal) throws InterruptedException {
         System.out.println("GAME OVER");
         String text = "GAME OVER";
@@ -73,12 +94,13 @@ public class Game {
         int y = 5;
 
         for (int i = 0; i <text.length(); i++) {
-            Thread.sleep(300);
+            Thread.sleep(200);
             terminal.moveCursor(x,y+i);
             terminal.applyForegroundColor(colors[i].color1, colors[i].color2, colors[i].color3);
             terminal.putCharacter(text.charAt(i));
+            terminal.moveCursor(0,0);
         }
-        Thread.sleep(1000);
+        Thread.sleep(1500);
     }
 
     private static void DrawFrame(Terminal terminal){

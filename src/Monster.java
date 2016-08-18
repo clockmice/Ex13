@@ -1,8 +1,8 @@
 public class Monster {
-    public int x;
-    public int y;
+    public float x;
+    public float y;
 
-    public Monster(int x, int y) {
+    public Monster(float x, float y) {
         this.x = x;
         this.y = y;
     }

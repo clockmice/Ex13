@@ -2,10 +2,10 @@ import com.googlecode.lanterna.input.Key;
 import com.googlecode.lanterna.terminal.Terminal;
 
 public class Player {
-    public int x = 0;
-    public int y = 0;
+    public float x = 0;
+    public float y = 0;
 
-    public Player(int x, int y) {
+    public Player(float x, float y) {
         this.x = x;
         this.y = y;
     }
@@ -20,22 +20,22 @@ public class Player {
         switch (key.getCharacter()){
             case 'U':
                 if (player.y > 1) {
-                    player.y-=1;
+                    player.y--;
                 }
                 break;
             case 'D':
                 if (player.y < 24) {
-                    player.y+=1;
+                    player.y++;
                 }
                 break;
             case 'L':
                 if (player.x > 2) {
-                    player.x-=2;
+                    player.x--;
                 }
                 break;
             case 'R':
                 if (player.x < 24) {
-                    player.x+=2;
+                    player.x++;
                 }
                 break;
         }
