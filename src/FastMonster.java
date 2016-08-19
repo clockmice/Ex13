@@ -4,5 +4,7 @@
 public class FastMonster extends Monster {
     public FastMonster(float x, float y) {
         super(x, y);
+        speed = 0.3f;
+        displayChar = 'F';
     }
 }
