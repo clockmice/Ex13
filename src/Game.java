@@ -7,7 +7,7 @@ public class Game {
 
     public Player player;
     public static Terminal terminal;
-    List<Monster> monsters ;
+    List<Monster> monsters;
 
     public Game(Player player, List<Monster> monsters, Terminal terminal) {
         this.player = player;
